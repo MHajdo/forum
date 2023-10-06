@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+Useri
+{% endblock title %}
+
+{% block body %}
+
+<table>
+    <tr>
+        <td>Id</td>
+        <td>Username</td>
+        <td>Email</td>
+    </tr>
+    {% for user in users %}
+
+    <tr>
+        <td>{{user.user_id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.email}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<form method="post" action="users">
+    <button type="submit">submit</button>
+</form>
+
+{% endblock body %}
