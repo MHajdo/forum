@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from sqla_wrapper import SQLAlchemy
 from datetime import datetime
 from essential_generators import DocumentGenerator
 from random import randint
-import bcrypt
+import hashlib
+import uuid
 
 db = SQLAlchemy('sqlite:///my_db.sqlite')
 
@@ -35,7 +36,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    user = None
+    session_id = request.cookies.get('session_token')
+    if session_id:
+        user = db.query(User).filter_by(session_token=session_id).first()
+
+    if user:
+        message=f'logged in with user "{user.username}"'
+    return render_template('index.html', msg=message)
 
 
 @app.route('/topics')
@@ -71,7 +79,17 @@ def user_sign_up():
 
         return render_template('sign-up.html', users=all_users)
     else:
-        return 'post handler'
+        username = request.form.get('username')
+        email = request.form.get('email')
+        hashed_password = hashlib.sha256(request.form.get('password').encode()).hexdigest()
+        session_token = str(uuid.uuid4())
+        user = User(username=username, email=email, password_hash=hashed_password, session_token=session_token)
+        db.add(user)
+        db.commit()
+
+        response = make_response('signup successful')
+        response.set_cookie('session_token', session_token)
+        return response
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -82,9 +100,14 @@ def user_login():
         return render_template('login.html', users=all_users)
     else:
         username = request.form.get('username')
-        hashed_password = bcrypt.hashpw(request.form.get('password').encode(), bcrypt.gensalt())
-        user = db.query(User).filter_by(username=username, password_hash=hashed_password).all()
-        return f'user: {user}<br> plain-tex pass: {request.form.get("password")}, <br> hashed_pass: {hashed_password}, <br> user_name: {user}'
+        hashed_password = hashlib.sha256(request.form.get('password').encode()).hexdigest()
+        user = db.query(User).filter_by(username=username, password_hash=hashed_password).first()
+        if user:
+            response = make_response('login successful')
+            response.set_cookie('session_token', user.session_token)
+            return response
+        else:
+            return 'login failed'
 
 
 if __name__ == '__main__':
