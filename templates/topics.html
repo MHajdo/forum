@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+Topics
+{% endblock title %}
+
+{% block body %}
+<h1>Forum - topics list</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for topic in topic %}
+        <tr>
+            <td><a href="/topics/{{ topic.id }}">{{ topic.title }}</a></td>
+            <td>{{ topic.author.username }}</td>
+            <td>{{ topic.created_at }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock body %}

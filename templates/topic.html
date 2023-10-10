@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-Aaa
+New topic
 {% endblock title %}
 
 {% block body %}
-{{ user.username }}
+
+<h1>{{ topic.title }}</h1>
+
+{{ topic.text }}
+
 {% endblock body %}

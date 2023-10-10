@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+New topic
+{% endblock title %}
+
+{% block body %}
+
+<h1>Create a new topic</h1>
+
+<form method="post" action="new-topic">
+    <label for="topic-title">Topic title</label>
+    <input type="text" name="topic-title" id="topic-title">
+    <br>
+    <label for="topic-text">Description</label>
+    <textarea name="topic-text" id="topic-text" rows="5"></textarea>
+    <br>
+    <button type="submit">Create</button>
+</form>
+
+{% endblock body %}
