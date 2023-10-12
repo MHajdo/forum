@@ -5,6 +5,10 @@ from random import randint
 from models import Users, Topics, Messages, db
 import hashlib
 import uuid
+import os
+import smartninja_redis
+
+redis = smartninja_redis.from_url(os.environ.get('REDIS_URL'))
 
 
 app = Flask(__name__)
@@ -42,18 +46,27 @@ def topics_topic_detail(topic_id):
 
 @app.route('/topics/new-topic', methods=['GET', 'POST'])
 def topics_new_topic():
+    user = get_user()
+    if not user:
+        return redirect(url_for('login'))
+
+    csrf_token = str(uuid.uuid4())
+    redis.set(name=csrf_token, value=user.username)
+
     if request.method == 'GET':
-        return render_template('topics-new-topic.html')
+        return render_template('topics-new-topic.html', csrf_token=csrf_token)
     else:
-        title = request.form.get('topic-title')
-        text = request.form.get('topic-text')
+        csrf_token = request.form.get('csrf_token')
+        redis_csrf_uname = redis.get(name=csrf_token)
+        if redis_csrf_uname and redis_csrf_uname == user.username:
+            title = request.form.get('topic-title')
+            text = request.form.get('topic-text')
 
-        user = get_user()
-        if not user:
-            return redirect(url_for('login'))
 
-        topic = Topics.create(title=title, text=text, author=user)
-        return redirect(url_for('topics'))
+            topic = Topics.create(title=title, text=text, author=user)
+            return redirect(url_for('topics'))
+        else:
+            return abort(403)
 
 
 #@app.route('/posts', methods=['GET', 'POST'])

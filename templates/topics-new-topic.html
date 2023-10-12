@@ -9,6 +9,8 @@ New topic
 <h1>Create a new topic</h1>
 
 <form method="post" action="new-topic">
+    <input name="csrf_token" value="{{ csrf_token }}" type="hidden">
+    <br>
     <label for="topic-title">Topic title</label>
     <input type="text" name="topic-title" id="topic-title">
     <br>
