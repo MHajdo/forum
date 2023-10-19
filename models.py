@@ -1,7 +1,7 @@
 from sqla_wrapper import SQLAlchemy
 from datetime import datetime
 
-db = SQLAlchemy('sqlite:///my_db.sqlite')
+db = SQLAlchemy('sqlite:///my_db.sqlite', connect_args={'check_same_thread': False})
 
 
 class Users(db.Model):
