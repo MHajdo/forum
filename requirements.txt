@@ -4,3 +4,4 @@ sqla-wrapper==4.200628
 essential-generators
 bcrypt
 smartninja-redis
+requests
