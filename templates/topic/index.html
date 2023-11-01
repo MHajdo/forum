@@ -1,9 +1,39 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    td {
+    font-size: 2em;
+    width: 2em;
+    height: 2em;
+    border: thin solid black;
+    text-align: center;
+    }
+</style>
+{% endblock head %}
+
 {% block title %}
-Aaa
+Tic-Tac-Toe
 {% endblock title %}
 
 {% block body %}
-{{ user.username }}
+<h1>Hello, {{ user.username }}</h1>
+
+<table>
+    <tr>
+        <td id="box0-0" onclick="makeMove(0, 0)"></td>
+        <td id="box0-1" onclick="makeMove(0, 1)"></td>
+        <td id="box0-2" onclick="makeMove(0, 2)"></td>
+    </tr>
+    <tr>
+        <td id="box1-0" onclick="makeMove(1, 0)"></td>
+        <td id="box1-1" onclick="makeMove(1, 1)"></td>
+        <td id="box1-2" onclick="makeMove(1, 2)"></td>
+    </tr>
+    <tr>
+        <td id="box2-0" onclick="makeMove(2, 0)"></td>
+        <td id="box2-1" onclick="makeMove(2, 1)"></td>
+        <td id="box2-2" onclick="makeMove(2, 2)"></td>
+    </tr>
+</table>
 {% endblock body %}

@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <title>{% block title %}My homepage{% endblock title %}</title>
     <link rel="stylesheet" href="static/css/style.css">
+    {% block head %}{% endblock head %}
 </head>
 <body>
 {% block body %}
 {% endblock body %}
+<script src="static/tictactoe.js"></script>
 </body>
 </html>
